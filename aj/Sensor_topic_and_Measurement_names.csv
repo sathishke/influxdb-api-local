@@ -1,0 +1,7 @@
+Machine ID,Sensor ID,Sensor Topic,Measurement Name
+1,1,sensornode/livestream/Accelerometer/x,Ax
+1,1,sensornode/livestream/Accelerometer/y,Ay
+1,1,sensornode/livestream/Accelerometer/z,Az
+1,1,sensornode/livestream/Gyroscope/x,Gx
+1,1,sensornode/livestream/Gyroscope/y,Gy
+1,1,sensornode/livestream/Gyroscope/z,Gz

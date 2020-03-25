@@ -1,0 +1,1 @@
+telegraf.exe --service install --config E:\telegraf-1.13.4_windows_amd64\file_multi_tagvalue.conf

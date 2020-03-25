@@ -1,0 +1,19 @@
+nssm status grafana
+nssm status influxdb
+nssm status mosquitto
+nssm status nginx
+run the py application
+run the node sense in mobile
+
+
+---- local setup----
+make sure port is opened by isp, call them if needed
+if the port is opened and still not working, try changing to different port
+make sure port is opened by os firewall or any other firewall s/w installed
+make port forwarding is configured in router
+create a ddns(no-ip)
+register ddns in the router and make it is getting connected
+
+telnet to host and port should work(if every thing is right) from anywhere
+
+use port-listener to test port listening

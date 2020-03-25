@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 23 10:57:38 2020
+"""
+
+import influxdb
+import pandas as pd
+import numpy as np
+#from datetime import datetime
+import matplotlib.pyplot as plt
+import pytz
+import datetime
+from pull_data_from_influx import pull_data_from_influx
+import time
+
+StatEngine = 1
+
+while StatEngine == 1:
+    your_query='SELECT Value FROM "autogen"."Ax" WHERE time > now() - 2h;'
+    df=pull_data_from_influx(your_query,database_name="sensors",IP_of_influx="127.0.0.1",port=8086)
+    your_sec_query='SELECT moving_average("Value", 10) FROM "autogen"."Ax" WHERE time > now() - 2h;'
+    df2=pull_data_from_influx(your_sec_query,database_name="sensors",IP_of_influx="127.0.0.1",port=8086)
+    print(df)
+    #fig, ax = plt.subplots(figsize=(15,10))
+    #ax.hold(True)
+
+    #plt.figure(1)
+    #df2.plot(x ='datetime', y='moving_average', kind = 'line')
+    df.plot(x ='datetime', y='Value', kind = 'line')
+    #df3 = pd.concat([s1, s2], axis=1)
+
+    #plt.show()
+    time.sleep(10)
+    StatEngine =1

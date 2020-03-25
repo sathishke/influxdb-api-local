@@ -1,0 +1,9 @@
+starting broker
+E:\mosquitto>mosquitto -v
+
+test mosquitto subcription connectivity - without publishing
+    mosquitto_sub -h localhost -t $SYS/# -v
+
+test publish and subscribe
+E:\mosquitto>mosquitto_pub -h localhost -t topic/test -m 'helloWorld'
+E:\mosquitto>mosquitto_sub -h localhost -t topic/test
