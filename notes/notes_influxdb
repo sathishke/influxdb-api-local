@@ -1,0 +1,10 @@
+# set precision
+precision rfc3339
+
+#select recent records
+select * from mean order by time desc limit 1
+
+# set precision
+precision rfc3339
+
+influx -database test1 -host localhost -execute "SELECT * FROM Ax WHERE time > now() - 24h" -format csv > E:/influxdb-api-local/sample_extract.csv

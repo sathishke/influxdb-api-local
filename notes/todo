@@ -1,0 +1,16 @@
+add logging
+add exception handling
+add documentation
+close influxdb connection?
+write point in batches
+
+
+prerequisite
+  folders raw, preprocessed in the location where you download the given file
+  influxdbs : test1, preprocessed
+every 30 secs
+  start time is noted
+  extracts the data from influxdb(test1.Ax) pushing to csv in raw folder
+  preprocessing is done( to be change as per your need)
+  preprocessed data is stored in preprocessed folder, with the noted start time
+  preprocessed data from preprocessed folder is pushed to influxdb(preprocessed.Ax)

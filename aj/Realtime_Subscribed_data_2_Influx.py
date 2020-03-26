@@ -7,7 +7,7 @@
 #Imports
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
-import pandas as pd 
+import pandas as pd
 #Import list of Sensor topic and Measurement names
 Sensor_Topic_and_Measurement_names=pd.read_csv('Sensor_topic_and_Measurement_names.csv', sep=',')
 
@@ -29,9 +29,9 @@ def Write_Realtime_data_2_Influxdb(msg_payload,measurement_name):
     ]
     influx_client.write_points(json_body)
     #print(value_acc ) #Uncomment to see sensor data in console.
-    
-    
-    
+
+
+
 ############################################ Helpers ########################################
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -49,7 +49,7 @@ def on_connect(client, userdata, flags, rc):
         print("Connection refused – not authorised, Returned code=",rc)
     else:
         print("Currently unused, Returned code=",rc)
-    
+
 
 # The callback for when a PUBLISH message is received from the server.
 
@@ -62,7 +62,7 @@ def on_message(mqttc, obj, msg):
     A=Sensor_Topic_and_Measurement_names[Sensor_Topic_and_Measurement_names.values[:,2] == Topic_name]
     #print(bool(A.values[:,3]))
     if str(bool(A.values[:,3]))=="True":
-        measurement_name = str(A.values[:,3])[2:-2] 
+        measurement_name = str(A.values[:,3])[2:-2]
         Write_Realtime_data_2_Influxdb(msg.payload,measurement_name)
     else:
         pass
@@ -94,7 +94,7 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("192.168.1.8", 1883)
+mqttc.connect("192.168.1.17", 1883)
 #Subscribing to all topics
 mqttc.subscribe("#", qos=2)
 

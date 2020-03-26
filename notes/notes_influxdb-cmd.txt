@@ -1,5 +1,0 @@
-# set precision
-precision rfc3339
-
-#select recent records
-select * from mean order by time desc limit 1
