@@ -1,3 +1,6 @@
 preprocessed/
 raw/
 __pycache__
+/.project
+/.pydevproject
+/.spyproject

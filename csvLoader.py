@@ -1,12 +1,10 @@
 from influxdb import InfluxDBClient
 import csv
-import time
 import subprocess
 
+default_target_client = InfluxDBClient(host='localhost', port='8086', database='preprocessed')
 
-client = InfluxDBClient(host='localhost', port='8086', database='preprocessed')
-
-def CsvToInfluxDB(fileName, influxdbClient=client, customInputTime=None):
+def CsvToInfluxDB(fileName, influxdbClient=default_target_client, customInputTime=None):
     """
     reads data from csv and stores in influxdb
     ===========================
@@ -26,7 +24,7 @@ def CsvToInfluxDB(fileName, influxdbClient=client, customInputTime=None):
             measurement = row[0]
             tags = row[1]
             fields = row[2]
-            customtimestamp = row[4] if customInputTime == None else str(customInputTime)
+            customtimestamp = row[3] if customInputTime == None else str(customInputTime)
             if tags == '':
                 line_data = measurement  + ' ' + fields + ' ' + customtimestamp
             else:
@@ -40,13 +38,13 @@ def influxDBToCsv(fileName, query, host="localhost", port="8086", database="test
     Executes above command in terminal, make sure you have influx client installed
     """
     print("Loading data from influxdb http(s)://"+ host+ ":"+ port, "into", fileName)
-    subprocess.run([influxClientPath + "\influx", "-database", database, "-host", host, "-port",\
-        port, "-execute", query, "-format", "csv", ">", fileName], shell=True, check=True)
-
-rawDataclient = InfluxDBClient(host="localhost", port="8086", database="test1")
-
+    with open(fileName, "w") as file:
+        subprocess.run([influxClientPath + "/influx", "-database", database, "-host", host, "-port",\
+        port, "-execute", query, "-format", "csv"], stdout=file)
+        
 #pull data from influxdb and store in csv
-#influxDBToCsv("E:/influxdb-api-local/test.csv", query="SELECT * FROM Ax WHERE time > now() - 24h", influxClientPath="E:\influxdb-1.7.10-1")
+#influxDBToCsv("../raw/test.csv", query="SELECT * FROM Ax WHERE time > now() - 24h", influxClientPath="/Users/aj_heartnett/PycharmProjects/Influxdb_py_main/influxdb-1.7.10-1/usr/bin")
+#influxDBToCsv("./raw/test.csv", query="SELECT * FROM Ax WHERE time > now() - 24h", influxClientPath="E:\influxdb-1.7.10-1")
 
 #pull data from csv and store in influxdb
 #CsvToInfluxDB('sample_data.csv', InfluxDBClient(host='localhost', port='8086', database='preprocessed'), time.time_ns())

@@ -3,8 +3,14 @@ import time
 import csv
 from datetime import datetime
 from influxdb import InfluxDBClient
+import configparser
 
-def preprocess(inputfileName, outputFileName, start_time):
+config = configparser.ConfigParser()
+config.read('./config/config.ini')
+influxdb_config = config['influxdb']
+default_config = config['DEFAULT']
+
+def preprocess(inputfileName, outputFileName, start_time=None):
     """
     read from the inputfile
     preprocess
@@ -19,8 +25,8 @@ def preprocess(inputfileName, outputFileName, start_time):
             #need to change if tags/multiple fields are coming in
             for row in reader:
                 if isFirstLine==1:
-                    measurementName =row[0]
-                    tagNames=''
+                    #measurementName =row[0]
+                    #tagNames=''
                     fieldNames=row[2]
                     isFirstLine = 0
                 else:
@@ -31,10 +37,12 @@ def preprocess(inputfileName, outputFileName, start_time):
                     line_data = measurement + '~' + tags + "~" + fieldNames+ "=" + fields + '~' + customtimestamp
                     outputFile.write(line_data + '\n')
 
-preprocessOutputDB = InfluxDBClient(host='localhost', port='8086', database='preprocessed')
+preprocessOutputDB = InfluxDBClient(host=influxdb_config['preprocessed_data_host'],
+                                    port=influxdb_config['preprocessed_data_port'],
+                                    database=influxdb_config['preprocessed_database'])
 
-def loadAndPreprocess(query, query_interval, rawDatahost="localhost", rawDataport="8086", rawDatabase="test1",\
- influxClientPath=".", inputFilePath = ".", outputFilePath = "./", fileName=None, preprocessOutputDB=preprocessOutputDB):
+def loadAndPreprocess(query, query_interval, rawDatahost="localhost", rawDataport='port', rawDatabase="test1",
+                      influxClientPath=".", inputFilePath = ".", outputFilePath = "./", fileName=None, preprocessOutputDB=preprocessOutputDB):
     """Starting point for preprocess
     """
     start_time = time.time_ns()
@@ -46,24 +54,17 @@ def loadAndPreprocess(query, query_interval, rawDatahost="localhost", rawDatapor
     #read data
     csvLoader.influxDBToCsv(inputFileName, query, rawDatahost, rawDataport, rawDatabase, influxClientPath)
     #preprocess the data here
-    preprocess(inputFileName, outputFileName, start_time)
+    preprocess(inputFileName, outputFileName)
     #write data
-    csvLoader.CsvToInfluxDB(outputFileName, preprocessOutputDB, time.time_ns())
+    csvLoader.CsvToInfluxDB(outputFileName, preprocessOutputDB)
     print('Waiting.....')
     time.sleep(query_interval)
 
-
-filePath = "E:/influxdb-api-local/"
-csvFileName="collected_data.csv"
-query="SELECT * FROM Ax WHERE time > now() - 24h"
-rawDatahost="localhost"
-rawDataport="8086"
-rawDatabase="test1"
-influxClientPath="E:\influxdb-1.7.10-1"
-#sleep for 10 secs
-query_interval=30
+#sleep for 30 secs
+query_interval=int(default_config['query_interval'])
 
 while "true":
-    loadAndPreprocess(query, query_interval, rawDatahost,rawDataport,rawDatabase,influxClientPath,\
-    inputFilePath = "./raw", outputFilePath = "./preprocessed", preprocessOutputDB=preprocessOutputDB)
+    loadAndPreprocess(default_config['query'], query_interval, influxdb_config['raw_data_host'],influxdb_config['raw_data_port'],
+                      influxdb_config['raw_database'],influxdb_config['client_path'],
+                      inputFilePath = "./raw", outputFilePath = "./preprocessed", preprocessOutputDB=preprocessOutputDB)
 #preprocess("test.csv", time.time_ns())
