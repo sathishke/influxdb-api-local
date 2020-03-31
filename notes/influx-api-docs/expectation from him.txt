@@ -1,0 +1,16 @@
+convert the code into python
+node-red reading
+give the code to him
+read his doc
+
+
+mqtt-broker
+
+node-red/telegraf
+
+influx-db
+
+grafana
+
+
+
