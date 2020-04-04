@@ -1,26 +1,5 @@
-1. process all metrics (Ax,Ay..Gx...)
-2. Can we do the preprocessing too? Like outliers detection and replace with mean, missing data handling, and NA 
-3. Real time analysis without using CSV at all
-4. tic-toc
-
-add logging
 add exception handling
 add documentation
 close influxdb connection?
 write point in batches
-
-
-prerequisite
-  folders raw, preprocessed in the location where you download the given file
-  influxdbs : test1, preprocessed
-every 30 secs
-  start time is noted
-  extracts the data from influxdb(test1.Ax) pushing to csv in raw folder
-  preprocessing is done( to be change as per your need)
-  preprocessed data is stored in preprocessed folder, with the noted start time
-  preprocessed data from preprocessed folder is pushed to influxdb(preprocessed.Ax)
-  
-  base config and env specifc extended config
-  
-  
-  @ max what would be time window data needs to be fetched from raw data db? For example if we are taking 5 mins of Ax, with 70Hz will generate 2M datapoints
+base config and env specifc extended config
