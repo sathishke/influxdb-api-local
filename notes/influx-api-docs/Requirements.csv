@@ -1,0 +1,6 @@
+1,"Process all metrics (Ax,Ay,...Gx...)"
+2,Tic-toc (Optional)
+3,"Components in Preprocessing like Outliers detection and replace with mean, missing data handling, and NA."
+4,Real time analysis without using CSV by preprocessing
+5,"After preprocessing we should write a small code to ask it to predict what will happen in future.. i.e, future predictions/ Future Forecasting"
+6,Anomaly detection
