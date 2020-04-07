@@ -5,3 +5,5 @@ __pycache__
 /.pydevproject
 /.spyproject
 /log/
+/Project_ADAPT/Influxdb_py_main/influxdb-1.7.10-1/
+/.settings
