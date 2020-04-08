@@ -1,5 +1,5 @@
 from influxdb import InfluxDBClient
-import configparser
+from configparser import ConfigParser, ExtendedInterpolation
 import logging
 from pytz import utc
 
@@ -9,11 +9,14 @@ from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
 import logger_config
 
-config = configparser.ConfigParser()
+#config = configparser.ConfigParser()
+config = ConfigParser(interpolation=ExtendedInterpolation())
 config.read('./config/application.ini')
 influxdb_config = config['influxdb']
 default_config = config['common']
 queries_config = config['queries_mean']
+online_mean_config = config['online_mean_config']
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +30,21 @@ def loadAndPreprocess(query, rawDataDB=rawDataDB, preprocessOutputDB=preprocessO
     """Starting point for preprocess
     """
     res = rawDataDB.query(query)
-    meanPoints = rawDataDB.query(query).get_points()
-    meanPoint = next(meanPoints)
-    mean = [
-        {
-            "measurement": res.keys()[0][0],
-            "fields": {
-                "value": meanPoint['mean']
-            },
-            "time": meanPoint['time']
-        }
-    ]
-    preprocessOutputDB.write_points(mean)
+    meanPoints = res.get_points()
+    for meanPoint in meanPoints:
+        if(meanPoint['count'] >= int(online_mean_config['having'])):
+            mean = [
+                {
+                    "measurement": res.keys()[0][0],
+                    "fields": {
+                        "value": meanPoint['mean']
+                    },
+                    "time": meanPoint['time']
+                }
+            ]
+            preprocessOutputDB.write_points(mean)
+        else:
+            logger.error("Data ignored as the number of records is not upto expectation %s, here is the data %s", online_mean_config['having'], meanPoint)
 
 if __name__ == '__main__':
     logger_config.setup_logging()    
