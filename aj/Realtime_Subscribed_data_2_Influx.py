@@ -85,7 +85,7 @@ def on_log(mqttc, obj, level, string):
 # but note that the client id must be unique on the broker. Leaving the client
 # id parameter empty will generate a random id for you.
 
-influx_client = InfluxDBClient('localhost', 8086, database='test1')
+influx_client = InfluxDBClient('localhost', 8086, database='sensors')
 
 mqttc = mqtt.Client()
 mqttc.on_message = on_message
