@@ -3,7 +3,6 @@ from configparser import ConfigParser, ExtendedInterpolation
 import logging
 from pytz import utc
 
-
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
@@ -23,8 +22,13 @@ logger = logging.getLogger(__name__)
 preprocessOutputDB = InfluxDBClient(host=influxdb_config['preprocessed_data_host'],
                                     port=influxdb_config['preprocessed_data_port'],
                                     database=influxdb_config['preprocessed_database'])
-rawDataDB = InfluxDBClient(host=influxdb_config['raw_data_host'], port=influxdb_config['raw_data_port'], database=influxdb_config['raw_database'])
+rawDataDB = InfluxDBClient(host=influxdb_config['raw_data_host'], 
+                           port=influxdb_config['raw_data_port'], 
+                           database=influxdb_config['raw_database'])
 
+forecast_db = InfluxDBClient(host=influxdb_config['forecast_db_host'],
+                                    port=influxdb_config['forecast_db_port'],
+                                    database=influxdb_config['forecast_db'])
 
 def loadAndPreprocess(query, rawDataDB=rawDataDB, preprocessOutputDB=preprocessOutputDB):
     """Starting point for preprocess
@@ -33,18 +37,23 @@ def loadAndPreprocess(query, rawDataDB=rawDataDB, preprocessOutputDB=preprocessO
     meanPoints = res.get_points()
     for meanPoint in meanPoints:
         if(meanPoint['count'] >= int(online_mean_config['having'])):
+            meanValue = meanPoint['mean']
             mean = [
-                {
-                    "measurement": res.keys()[0][0],
-                    "fields": {
-                        "value": meanPoint['mean']
-                    },
-                    "time": meanPoint['time']
-                }
+            {
+                "measurement": res.keys()[0][0],
+                "fields": {
+                    "value": meanValue
+                },
+                "time": meanPoint['time']
+            }
             ]
+            #just for viewing in console
+            if(res.keys()[0][0] == 'Ax'):
+                print(mean)
             preprocessOutputDB.write_points(mean)
-        else:
-            logger.error("Data ignored as the number of records is not upto expectation %s, here is the data %s", online_mean_config['having'], meanPoint)
+            forecast_db.write_points(mean)
+        # else:
+        #     forecast.forecast(res.keys()[0][0])
 
 if __name__ == '__main__':
     logger_config.setup_logging()    
