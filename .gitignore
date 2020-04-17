@@ -7,3 +7,7 @@ __pycache__
 /log/
 /Project_ADAPT/Influxdb_py_main/influxdb-1.7.10-1/
 /.settings
+/.idea
+/2d_extract.csv
+/2d_forecast_extract.csv
+/forecasts.csv

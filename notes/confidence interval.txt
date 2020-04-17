@@ -1,0 +1,21 @@
+https://www.researchgate.net/post/Difference_between_uncertainty_intervals_and_confidence_intervals_in_public_health2
+https://stackoverflow.com/questions/52968469/what-is-yhat-yhat-lower-yhat-upper-in-facebook-prophet
+https://facebook.github.io/prophet/docs/uncertainty_intervals.html
+https://github.com/facebook/prophet/issues/266
+
+https://blog.exploratory.io/an-introduction-to-time-series-forecasting-with-prophet-package-in-exploratory-129ed0c12112
+
+
+http://iotdev.hopto.org:81/api/datasources/proxy/4/query?db=forecast&q=
+SELECT value FROM Ax WHERE time > 201586952463716ms and time < 201586959064904ms&epoch=ms"
+
+
+influx -database forecast-host localhost -execute "select value from Ax where time < now() - 2d" -format csv > E:/influxdb-api-local/2d_forecast_extract.csv
+
+
+curl -G 'http://iotdev.hopto.org:81/api/datasources/proxy/3/query?db=preprocessed&q=SELECT%20%22value%22%20FROM%20%22Ax%22%20WHERE%20time%20%3E%3D%20now()%20-%202d&epoch=ms' --data-urlencode --data-urlencode -H "Accept: application/csv"
+name,tags,time,host,region,value
+cpu,,1493031640435991638,serverA,us_west,0.64
+
+151 757 7336
+158 674 7459 000 000 000
