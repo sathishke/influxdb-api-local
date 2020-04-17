@@ -5,13 +5,13 @@ Created on Thu Apr 16 12:41:38 2020
 @author: Sathish
 """
 from configparser import ConfigParser, ExtendedInterpolation
-from influxdb import DataFrameClient
-from fbprophet.diagnostics import cross_validation
+
 import pandas as pd
 from fbprophet import Prophet
-from fbprophet.plot import plot_cross_validation_metric
+from fbprophet.diagnostics import cross_validation
 from fbprophet.diagnostics import performance_metrics
-
+from fbprophet.plot import plot_cross_validation_metric
+from influxdb import DataFrameClient
 
 config = ConfigParser(interpolation=ExtendedInterpolation())
 config.read('./config/application.ini')
@@ -24,7 +24,7 @@ preprocess_db = DataFrameClient(host=influxdb_config['preprocessed_data_host'],
 def measure_accuracy(input_db = preprocess_db):
     
     print("Starting prediction")
-    #get latest 300 points from 24 hours of data and measure accuracy
+    #get latest 300 points from last 24 hours of data and measure accuracy
     res = input_db.query('select * from Ax where time > now()- 24h order by time desc limit 300')
     measurement = next(iter(res))
     ret = res[measurement]
@@ -42,7 +42,6 @@ def measure_accuracy(input_db = preprocess_db):
     #plot mean squared error
     #refer https://facebook.github.io/prophet/docs/diagnostics.html
     plot_cross_validation_metric(df_cv, metric='mse')
-
-
+    
 if __name__ == '__main__':
     measure_accuracy(preprocess_db)

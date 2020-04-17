@@ -52,9 +52,9 @@ def pull_data_from_influx(your_query,database_name,IP_of_influx="127.0.0.1",port
 
 # =============================================================================
 # Use the code below to run the function
-your_query='SELECT Value FROM "autogen"."Ax" WHERE time > now() - 24h;'
+your_query='SELECT value FROM "autogen"."Ax" WHERE time > now() - 24h;'
 df=pull_data_from_influx(your_query,database_name="sensors",IP_of_influx="127.0.0.1",port=8086)
 print(df)
-df.plot(x ='datetime', y='Value', kind = 'line')
+df.plot(x ='datetime', y='value', kind = 'line')
 plt.show()
 # =============================================================================
