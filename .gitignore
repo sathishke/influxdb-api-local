@@ -11,3 +11,4 @@ __pycache__
 /2d_extract.csv
 /2d_forecast_extract.csv
 /forecasts.csv
+forecast/

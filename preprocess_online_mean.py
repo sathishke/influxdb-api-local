@@ -56,7 +56,6 @@ def loadAndPreprocess(query, rawDataDB=rawDataDB, preprocessOutputDB=preprocessO
         #     forecast.forecast(res.keys()[0][0])
 
 if __name__ == '__main__':
-    logger_config.setup_logging()    
     jobstores = {
         'default': MemoryJobStore()
     }
